@@ -1,11 +1,12 @@
 import { useState } from "react"
+import { Plus } from "lucide-react"
 
 import { CreateActivityModal } from "./create-activity-modal"
 import { ImportantLinks } from "./important-links"
 import { Guests } from "./guests"
 import { DestinationAndDateHeader } from "./destination-and-date-header"
 import { Activities } from "./activities"
-import { Plus } from "lucide-react"
+import { Button } from "../../components/button"
 
 export const TripDetailsPage = () => {
   const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] =
@@ -23,14 +24,10 @@ export const TripDetailsPage = () => {
         <section className="flex-1 space-y-6">
           <div className="flex items-center justify-between">
             <h2 className="text-3xl font-semibold">Atividades</h2>
-            <button
-              type="button"
-              onClick={handleOpenCreateActivityModal}
-              className="flex items-center gap-2 rounded-lg bg-lime-300 px-5 py-2 font-medium text-lime-950 hover:bg-lime-400"
-            >
+            <Button onClick={handleOpenCreateActivityModal}>
               <Plus size={20} />
               Cadastrar atividade
-            </button>
+            </Button>
           </div>
 
           <Activities />
