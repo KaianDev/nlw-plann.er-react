@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
+
 import { InviteGuestModal } from "./invite-guest-modal"
 import { ConfirmTripModal } from "./confirm-trip-modal"
 import { DestinationAndDateStep } from "./steps/destination-and-date-step"
