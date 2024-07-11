@@ -10,19 +10,22 @@ import "react-day-picker/dist/style.css"
 
 interface DestinationAndDateStepProps {
   isGuestInputOpen: boolean
+  eventStartAndEndDates: DateRange | undefined
   handleCloseGuestInput: () => void
   handleOpenGuestInput: () => void
+  setDestination: (destination: string) => void
+  setEventStartAndEndDates: (dates: DateRange | undefined) => void
 }
 
 export const DestinationAndDateStep = ({
   isGuestInputOpen,
+  eventStartAndEndDates,
   handleCloseGuestInput,
   handleOpenGuestInput,
+  setDestination,
+  setEventStartAndEndDates,
 }: DestinationAndDateStepProps) => {
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
-  const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
-    DateRange | undefined
-  >()
 
   const handleCloseDatePicker = () => setIsDatePickerOpen(false)
   const handleOpenDatePicker = () => setIsDatePickerOpen(true)
@@ -42,6 +45,7 @@ export const DestinationAndDateStep = ({
         <MapPin className="size-5 text-zinc-400" />
         <input
           type="text"
+          onChange={(e) => setDestination(e.target.value)}
           placeholder="Para onde você vai?"
           disabled={isGuestInputOpen}
           className="w-full bg-transparent text-lg outline-none placeholder:text-zinc-400"
@@ -53,7 +57,7 @@ export const DestinationAndDateStep = ({
         className="flex w-[240px] items-center gap-2 text-lg text-zinc-400"
       >
         <Calendar size={20} />
-        <span className="text-start flex-1">{displayedDate}</span>
+        <span className="flex-1 text-start">{displayedDate}</span>
       </button>
       {isDatePickerOpen && (
         <Modal size="sm" onCloseClick={handleCloseDatePicker}>

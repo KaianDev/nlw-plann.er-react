@@ -12,11 +12,15 @@ import { Input } from "../../components/input"
 interface ConfirmTripModalProps {
   handleCloseConfirmTripModal: () => void
   handleCreateTripSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  setOwnerName: (name: string) => void
+  setOwnerEmail: (email: string) => void
 }
 
 export const ConfirmTripModal = ({
   handleCloseConfirmTripModal,
   handleCreateTripSubmit,
+  setOwnerName,
+  setOwnerEmail,
 }: ConfirmTripModalProps) => {
   return (
     <Modal onCloseClick={handleCloseConfirmTripModal}>
@@ -35,11 +39,17 @@ export const ConfirmTripModal = ({
         </ModalDescription>
       </ModalHeader>
       <form onSubmit={handleCreateTripSubmit} className="space-y-3">
-        <Input icon={User} name="name" placeholder="Seu nome completo" />
+        <Input
+          icon={User}
+          name="name"
+          placeholder="Seu nome completo"
+          onChange={(e) => setOwnerName(e.target.value)}
+        />
         <Input
           icon={Mail}
           name="email"
           type="email"
+          onChange={(e) => setOwnerEmail(e.target.value)}
           placeholder="Seu e-mail pessoal"
         />
         <Button type="submit" size="full">

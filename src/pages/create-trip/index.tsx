@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { DateRange } from "react-day-picker"
 
 import { InviteGuestModal } from "./invite-guest-modal"
 import { ConfirmTripModal } from "./confirm-trip-modal"
-import { DestinationAndDateStep } from "./steps/destination-and-date-step"
 import { InviteGuestStep } from "./steps/invite-guest-step"
+import { DestinationAndDateStep } from "./steps/destination-and-date-step"
+import { api } from "../../lib/axios"
 
 export const CreateTripPage = () => {
   const navigate = useNavigate()
@@ -12,6 +14,13 @@ export const CreateTripPage = () => {
   const [isGuestInputOpen, setIsGuestInputOpen] = useState(false)
   const [isGuestModalOpen, setIsGuestModalOpen] = useState(false)
   const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false)
+
+  const [destination, setDestination] = useState("")
+  const [ownerName, setOwnerName] = useState("")
+  const [ownerEmail, setOwnerEmail] = useState("")
+  const [eventStartAndEndDates, setEventStartAndEndDates] = useState<
+    DateRange | undefined
+  >()
 
   const [emailsToInvites, setEmailsToInvites] = useState([
     "diego@acme.com",
@@ -45,9 +54,28 @@ export const CreateTripPage = () => {
     setEmailsToInvites((prev) => prev.filter((email) => email !== removeEmail))
   }
 
-  const handleCreateTripSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleCreateTripSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    navigate("trip/123")
+
+    if (!destination) return
+    if (!ownerName || !ownerName) return
+    if (!eventStartAndEndDates?.from || !eventStartAndEndDates?.to) return
+    if (emailsToInvites.length === 0) return
+
+    const trip = {
+      destination,
+      owner_name: ownerName,
+      owner_email: ownerEmail,
+      starts_at: eventStartAndEndDates.from,
+      ends_at: eventStartAndEndDates.to,
+      emails_to_invite: emailsToInvites,
+    }
+
+    const results = await api.post("/trips", trip)
+
+    const { tripId } = results.data
+
+    navigate(`/trip/${tripId}`)
   }
 
   return (
@@ -62,8 +90,11 @@ export const CreateTripPage = () => {
         <div className="space-y-3">
           <DestinationAndDateStep
             isGuestInputOpen={isGuestInputOpen}
+            eventStartAndEndDates={eventStartAndEndDates}
+            setEventStartAndEndDates={setEventStartAndEndDates}
             handleCloseGuestInput={handleCloseGuestInput}
             handleOpenGuestInput={handleOpenGuestInput}
+            setDestination={setDestination}
           />
 
           {isGuestInputOpen && (
@@ -102,6 +133,8 @@ export const CreateTripPage = () => {
         <ConfirmTripModal
           handleCloseConfirmTripModal={handleCloseConfirmTripModal}
           handleCreateTripSubmit={handleCreateTripSubmit}
+          setOwnerName={setOwnerName}
+          setOwnerEmail={setOwnerEmail}
         />
       )}
     </div>
