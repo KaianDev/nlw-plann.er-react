@@ -8,11 +8,14 @@ import { DestinationAndDateHeader } from "./destination-and-date-header"
 import { Activities } from "./activities"
 import { Button } from "../../components/button"
 import { RegisterLink } from "./register-link"
+import { ConfirmParticipationModal } from "./confirm-participation-modal"
 
 export const TripDetailsPage = () => {
   const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] =
     useState(false)
   const [isRegisterLinkModalOpen, setIsRegisterLinkModalOpen] = useState(false)
+  const [isConfirmParticipationModalOpen, setIsConfirmParticipationModalOpen] =
+    useState(false)
 
   const handleOpenCreateActivityModal = () => setIsCreateActivityModalOpen(true)
   const handleCloseCreateActivityModal = () =>
@@ -20,6 +23,11 @@ export const TripDetailsPage = () => {
 
   const handleOpenRegisterLinkModal = () => setIsRegisterLinkModalOpen(true)
   const handleCloseRegisterLinkModal = () => setIsRegisterLinkModalOpen(false)
+
+  // const handleOpenConfirmParticipationModal = () =>
+  //   setIsConfirmParticipationModalOpen(true)
+  const handleCloseConfirmParticipationModal = () =>
+    setIsConfirmParticipationModalOpen(false)
 
   const handleRegisterLinkSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -64,6 +72,14 @@ export const TripDetailsPage = () => {
           <RegisterLink
             handleRegisterLinkSubmit={handleRegisterLinkSubmit}
             handleCloseRegisterLinkModal={handleCloseRegisterLinkModal}
+          />
+        )}
+
+        {isConfirmParticipationModalOpen && (
+          <ConfirmParticipationModal
+            handleCloseConfirmParticipationModal={
+              handleCloseConfirmParticipationModal
+            }
           />
         )}
       </main>
