@@ -7,6 +7,7 @@ import {
   ModalHeader,
   ModalTitle,
 } from "../../components/modal"
+import { Input } from "../../components/input"
 
 interface ConfirmTripModalProps {
   handleCloseConfirmTripModal: () => void
@@ -34,24 +35,13 @@ export const ConfirmTripModal = ({
         </ModalDescription>
       </ModalHeader>
       <form onSubmit={handleCreateTripSubmit} className="space-y-3">
-        <div className="flex h-14 items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950 px-4">
-          <User className="size-5 text-zinc-400" />
-          <input
-            name="name"
-            placeholder="Seu nome completo"
-            className="w-full bg-transparent outline-none placeholder:text-zinc-400"
-          />
-        </div>
-        <div className="flex h-14 items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950 px-4">
-          <Mail className="size-5 text-zinc-400" />
-          <input
-            type="email"
-            name="email"
-            placeholder="Seu e-mail pessoal"
-            className="w-full bg-transparent outline-none placeholder:text-zinc-400"
-          />
-        </div>
-
+        <Input icon={User} name="name" placeholder="Seu nome completo" />
+        <Input
+          icon={Mail}
+          name="email"
+          type="email"
+          placeholder="Seu e-mail pessoal"
+        />
         <Button type="submit" size="full">
           Confirmar criação da viagem
         </Button>
