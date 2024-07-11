@@ -7,14 +7,25 @@ import { Guests } from "./guests"
 import { DestinationAndDateHeader } from "./destination-and-date-header"
 import { Activities } from "./activities"
 import { Button } from "../../components/button"
+import { RegisterLink } from "./register-link"
 
 export const TripDetailsPage = () => {
   const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] =
     useState(false)
+  const [isRegisterLinkModalOpen, setIsRegisterLinkModalOpen] = useState(false)
 
   const handleOpenCreateActivityModal = () => setIsCreateActivityModalOpen(true)
   const handleCloseCreateActivityModal = () =>
     setIsCreateActivityModalOpen(false)
+
+  const handleOpenRegisterLinkModal = () => setIsRegisterLinkModalOpen(true)
+  const handleCloseRegisterLinkModal = () => setIsRegisterLinkModalOpen(false)
+
+  const handleRegisterLinkSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const data = new FormData(e.currentTarget)
+    console.log(Object.fromEntries(data))
+  }
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-10">
@@ -34,7 +45,9 @@ export const TripDetailsPage = () => {
         </section>
 
         <aside className="w-80 space-y-6">
-          <ImportantLinks />
+          <ImportantLinks
+            handleOpenRegisterLinkModal={handleOpenRegisterLinkModal}
+          />
 
           <div className="h-px w-full bg-zinc-800" />
 
@@ -44,6 +57,13 @@ export const TripDetailsPage = () => {
         {isCreateActivityModalOpen && (
           <CreateActivityModal
             handleCloseCreateActivityModal={handleCloseCreateActivityModal}
+          />
+        )}
+
+        {isRegisterLinkModalOpen && (
+          <RegisterLink
+            handleRegisterLinkSubmit={handleRegisterLinkSubmit}
+            handleCloseRegisterLinkModal={handleCloseRegisterLinkModal}
           />
         )}
       </main>
