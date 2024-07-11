@@ -9,3 +9,14 @@
 input {
   color-scheme: dark;
 }
+
+.rdp-day_selected {
+  background-color: #bef264;
+  border-color: #bef264;
+  color: #1a2e05;
+}
+
+.rdp-day_selected:hover {
+  background-color: #1a2e05;
+  color: white;
+}

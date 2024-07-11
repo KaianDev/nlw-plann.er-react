@@ -16,12 +16,24 @@ const ModalHeader = ({ children }: PropsWithChildren) => {
 interface ModalContentProps {
   children: React.ReactNode
   onCloseClick: () => void
+  size?: "sm" | "lg"
 }
 
-const ModalContent = ({ children, onCloseClick }: ModalContentProps) => {
+const ModalContent = ({
+  children,
+  size = "lg",
+  onCloseClick,
+}: ModalContentProps) => {
+  const sizeVariants = {
+    sm: "",
+    lg: "w-[640px]",
+  }
+
   return (
-    <div className="relative flex w-[640px] flex-col gap-5 rounded-xl bg-zinc-900 px-6 py-5 shadow-shape">
-      <ModalClose onClick={onCloseClick} /> 
+    <div
+      className={`relative flex flex-col gap-5 rounded-xl bg-zinc-900 px-6 py-5 shadow-shape ${sizeVariants[size]}`}
+    >
+      <ModalClose onClick={onCloseClick} />
       {children}
     </div>
   )
@@ -41,19 +53,22 @@ const ModalClose = ({ onClick }: ModalCloseProps) => {
 
 interface ModalProps {
   children: React.ReactNode
+  size?: "sm" | "lg"
   onCloseClick: () => void
 }
 
-const Modal = ({ children, onCloseClick }: ModalProps) => {
+const Modal = ({ children, onCloseClick, size = "lg" }: ModalProps) => {
   return (
     <ModalPortal>
-      <ModalContent onCloseClick={onCloseClick}>{children}</ModalContent>
+      <ModalContent onCloseClick={onCloseClick} size={size}>
+        {children}
+      </ModalContent>
     </ModalPortal>
   )
 }
 
 const ModalTitle = ({ children }: PropsWithChildren) => {
-  return <h2 className="text-lg font-semibold">{children}</h2>
+  return <h2 className="text-lg font-semibold text-start">{children}</h2>
 }
 
 const ModalDescription = ({ children }: PropsWithChildren) => {
