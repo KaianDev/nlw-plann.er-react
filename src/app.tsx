@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { CreateTripPage } from "./pages/create-trip"
 import { TripDetailsPage } from "./pages/trip-details"
+import { Providers } from "./providers"
 
 const router = createBrowserRouter([
   {
@@ -14,5 +15,9 @@ const router = createBrowserRouter([
 ])
 
 export const App = () => {
-  return <RouterProvider router={router} />
+  return (
+    <Providers>
+      <RouterProvider router={router} />
+    </Providers>
+  )
 }

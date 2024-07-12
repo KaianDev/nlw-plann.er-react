@@ -8,8 +8,9 @@ import {
   ModalDescription,
 } from "../../components/modal"
 import { Input } from "../../components/input"
-import { api } from "../../lib/axios"
+
 import { useParams } from "react-router-dom"
+import { useActivityMutation } from "../../lib/tanstack"
 
 interface CreateActivityModalProps {
   handleCloseCreateActivityModal: () => void
@@ -19,6 +20,8 @@ export const CreateActivityModal = ({
   handleCloseCreateActivityModal,
 }: CreateActivityModalProps) => {
   const { tripId } = useParams()
+
+  const addActivity = useActivityMutation()
 
   const handleCreateActivitySubmit = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -30,11 +33,12 @@ export const CreateActivityModal = ({
     const occurs_at = data.get("occurs_at")?.toString()
 
     if (!title || !occurs_at) return
-
-    await api.post(`/trips/${tripId}/activities`, {
+    await addActivity.mutateAsync({
+      tripId: tripId!,
       title,
       occurs_at,
     })
+
 
     handleCloseCreateActivityModal()
   }

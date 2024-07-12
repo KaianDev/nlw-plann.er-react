@@ -1,29 +1,15 @@
 import { CircleCheck } from "lucide-react"
-import { useEffect, useState } from "react"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { useParams } from "react-router-dom"
-
-import { api } from "../../lib/axios"
-
-interface Activity {
-  date: string
-  activities: {
-    id: string
-    title: string
-    occurs_at: string
-  }[]
-}
+import { useActivities } from "../../lib/tanstack"
 
 export const Activities = () => {
   const { tripId } = useParams<{ tripId: string }>()
-  const [activities, setActivities] = useState<Activity[]>([])
 
-  useEffect(() => {
-    api.get(`/trips/${tripId}/activities`).then((response) => {
-      setActivities(response.data.activities)
-    })
-  }, [tripId])
+  const { data, isLoading } = useActivities({ tripId: tripId! })
+  const activities = data?.activities
+  if (isLoading || !activities) return <p>Carregando...</p>
 
   return (
     <div className="space-y-8">
