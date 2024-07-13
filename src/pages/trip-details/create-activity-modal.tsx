@@ -1,4 +1,6 @@
+import { toast } from "sonner"
 import { Calendar, Tag } from "lucide-react"
+import { useParams } from "react-router-dom"
 
 import { Button } from "../../components/button"
 import {
@@ -9,8 +11,7 @@ import {
 } from "../../components/modal"
 import { Input } from "../../components/input"
 
-import { useParams } from "react-router-dom"
-import { useActivityMutation } from "../../lib/tanstack"
+import { useActivityMutation } from "../../hooks/tanstack"
 
 interface CreateActivityModalProps {
   handleCloseCreateActivityModal: () => void
@@ -21,7 +22,7 @@ export const CreateActivityModal = ({
 }: CreateActivityModalProps) => {
   const { tripId } = useParams()
 
-  const addActivity = useActivityMutation()
+  const mutation = useActivityMutation()
 
   const handleCreateActivitySubmit = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -33,12 +34,22 @@ export const CreateActivityModal = ({
     const occurs_at = data.get("occurs_at")?.toString()
 
     if (!title || !occurs_at) return
-    await addActivity.mutateAsync({
-      tripId: tripId!,
-      title,
-      occurs_at,
-    })
-
+    await mutation.mutateAsync(
+      {
+        tripId: tripId!,
+        title,
+        occurs_at,
+      },
+      {
+        onSuccess: () => {
+          toast("Nova atividade adicionada com sucesso!")
+        },
+        onError: (error) => {
+          console.error(error)
+          toast("Erro ao adicionar nova atividade")
+        },
+      },
+    )
 
     handleCloseCreateActivityModal()
   }

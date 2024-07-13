@@ -2,13 +2,12 @@ import { CircleCheck } from "lucide-react"
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { useParams } from "react-router-dom"
-import { useActivities } from "../../lib/tanstack"
+import { useActivities } from "../../hooks/tanstack"
 
 export const Activities = () => {
   const { tripId } = useParams<{ tripId: string }>()
 
-  const { data, isLoading } = useActivities({ tripId: tripId! })
-  const activities = data?.activities
+  const { data: activities, isLoading } = useActivities(tripId!)
   if (isLoading || !activities) return <p>Carregando...</p>
 
   return (
