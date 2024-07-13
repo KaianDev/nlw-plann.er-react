@@ -45,11 +45,15 @@ export const CreateActivityModal = ({
           toast("Nova atividade adicionada com sucesso!")
         },
         onError: (error) => {
-          console.error(error)
+          if (error instanceof Error) {
+            return toast(error.message)
+          }
           toast("Erro ao adicionar nova atividade")
         },
       },
     )
+
+    console.log(mutation.isError)
 
     handleCloseCreateActivityModal()
   }

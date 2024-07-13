@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 
 import { api } from "../../lib/axios"
 import { queryClient } from "../../lib/tanstack"
+import { AxiosError } from "axios"
 
 interface AddActivityProps {
   tripId: string
@@ -15,10 +16,16 @@ export const useActivityMutation = () => {
     title,
     occurs_at,
   }: AddActivityProps) => {
-    await api.post(`/trips/${tripId}/activities`, {
-      title,
-      occurs_at,
-    })
+    try {
+      await api.post(`/trips/${tripId}/activities`, {
+        title,
+        occurs_at,
+      })
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data.message)
+      }
+    }
   }
 
   return useMutation({

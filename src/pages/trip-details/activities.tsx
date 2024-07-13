@@ -7,8 +7,11 @@ import { useActivities } from "../../hooks/tanstack"
 export const Activities = () => {
   const { tripId } = useParams<{ tripId: string }>()
 
-  const { data: activities, isLoading } = useActivities(tripId!)
-  if (isLoading || !activities) return <p>Carregando...</p>
+  const { data: activities, isLoading, isError } = useActivities(tripId!)
+
+  if(isError) return <p>Erro ao carregar atividades</p>
+
+  if (isLoading || !activities) return <p className="animate-pulse">Carregando...</p>
 
   return (
     <div className="space-y-8">

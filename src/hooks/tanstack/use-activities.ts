@@ -2,11 +2,18 @@ import { useQuery } from "@tanstack/react-query"
 
 import { Activities } from "../../types/trips"
 import { api } from "../../lib/axios"
+import { AxiosError } from "axios"
 
 export const useActivities = (trips: string) => {
   const getActivities = async (tripId: string) => {
-    const response = await api.get(`/trips/${tripId}/activities`)
-    return response.data.activities as Activities[]
+    try {
+      const response = await api.get(`/trips/${tripId}/activities`)
+      return response.data.activities as Activities[]
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data.message)
+      }
+    }
   }
 
   return useQuery({
