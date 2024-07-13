@@ -5,14 +5,6 @@ import { format } from "date-fns"
 import { Button } from "../../components/button"
 import { useTrip } from "../../hooks/tanstack"
 
-interface Trip {
-  id: string
-  destination: string
-  starts_at: string
-  ends_at: string
-  is_confirm: boolean
-}
-
 export const DestinationAndDateHeader = () => {
   const { tripId } = useParams<{ tripId: string }>()
   const navigate = useNavigate()

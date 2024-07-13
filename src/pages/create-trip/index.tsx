@@ -104,6 +104,7 @@ export const CreateTripPage = () => {
         </div>
         <div className="space-y-3">
           <DestinationAndDateStep
+            destination={destination}
             isGuestInputOpen={isGuestInputOpen}
             eventStartAndEndDates={eventStartAndEndDates}
             setEventStartAndEndDates={setEventStartAndEndDates}

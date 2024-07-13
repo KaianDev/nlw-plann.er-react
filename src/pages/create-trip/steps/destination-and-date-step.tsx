@@ -9,6 +9,7 @@ import { Modal, ModalHeader, ModalTitle } from "../../../components/modal"
 import "react-day-picker/dist/style.css"
 
 interface DestinationAndDateStepProps {
+  destination: string
   isGuestInputOpen: boolean
   eventStartAndEndDates: DateRange | undefined
   handleCloseGuestInput: () => void
@@ -18,6 +19,7 @@ interface DestinationAndDateStepProps {
 }
 
 export const DestinationAndDateStep = ({
+  destination,
   isGuestInputOpen,
   eventStartAndEndDates,
   handleCloseGuestInput,
@@ -86,7 +88,11 @@ export const DestinationAndDateStep = ({
         <Button
           type="button"
           onClick={handleOpenGuestInput}
-          disabled={!eventStartAndEndDates?.from || !eventStartAndEndDates?.to}
+          disabled={
+            !eventStartAndEndDates?.from ||
+            !eventStartAndEndDates?.to ||
+            !destination
+          }
         >
           Continuar
           <ArrowRight size={20} />
