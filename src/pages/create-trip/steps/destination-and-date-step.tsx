@@ -83,7 +83,11 @@ export const DestinationAndDateStep = ({
           <Settings2 size={20} />
         </Button>
       ) : (
-        <Button type="button" onClick={handleOpenGuestInput}>
+        <Button
+          type="button"
+          onClick={handleOpenGuestInput}
+          disabled={!eventStartAndEndDates?.from || !eventStartAndEndDates?.to}
+        >
           Continuar
           <ArrowRight size={20} />
         </Button>

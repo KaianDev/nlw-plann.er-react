@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react"
 import { MapPin, Calendar, Settings2 } from "lucide-react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { format } from "date-fns"
 
 import { Button } from "../../components/button"
-import { api } from "../../lib/axios"
+import { useTrip } from "../../hooks/tanstack"
 
 interface Trip {
   id: string
@@ -16,13 +15,13 @@ interface Trip {
 
 export const DestinationAndDateHeader = () => {
   const { tripId } = useParams<{ tripId: string }>()
-  const [trip, setTrip] = useState<Trip | undefined>()
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    api.get(`/trips/${tripId}`).then((response) => {
-      setTrip(response.data.trip)
-    })
-  }, [tripId])
+  if (!tripId) return navigate("/")
+
+  const { data: trip, isError, isLoading } = useTrip(tripId!)
+
+  if (isError) return <p>Erro ao carregar viagem</p>
 
   const displayedDate = trip
     ? format(trip.starts_at, "d 'de' LLL")
@@ -32,22 +31,27 @@ export const DestinationAndDateHeader = () => {
 
   return (
     <header className="flex h-16 items-center justify-between rounded-xl bg-zinc-900 px-6 shadow-shape">
-      <div className="flex items-center gap-2">
-        <MapPin className="size-5 text-zinc-400" />
-        <span className="text-zinc-100">{trip?.destination}</span>
-      </div>
+      {isLoading && <p>Carregando...</p>}
+      {!isLoading && (
+        <>
+          <div className="flex items-center gap-2">
+            <MapPin className="size-5 text-zinc-400" />
+            <span className="text-zinc-100">{trip?.destination}</span>
+          </div>
 
-      <div className="flex items-center gap-5">
-        <div className="flex items-center gap-2">
-          <Calendar className="size-5 text-zinc-400" />
-          <span className="text-zinc-100">{displayedDate}</span>
-        </div>
-        <div className="h-6 w-px bg-zinc-800" />
-        <Button variant="secondary">
-          Alterar local/data
-          <Settings2 size={20} />
-        </Button>
-      </div>
+          <div className="flex items-center gap-5">
+            <div className="flex items-center gap-2">
+              <Calendar className="size-5 text-zinc-400" />
+              <span className="text-zinc-100">{displayedDate}</span>
+            </div>
+            <div className="h-6 w-px bg-zinc-800" />
+            <Button variant="secondary">
+              Alterar local/data
+              <Settings2 size={20} />
+            </Button>
+          </div>
+        </>
+      )}
     </header>
   )
 }

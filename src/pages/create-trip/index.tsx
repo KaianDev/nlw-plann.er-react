@@ -1,15 +1,17 @@
 import { FormEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { DateRange } from "react-day-picker"
+import { toast } from "sonner"
 
 import { InviteGuestModal } from "./invite-guest-modal"
 import { ConfirmTripModal } from "./confirm-trip-modal"
 import { InviteGuestStep } from "./steps/invite-guest-step"
 import { DestinationAndDateStep } from "./steps/destination-and-date-step"
-import { api } from "../../lib/axios"
+import { useTripMutation } from "../../hooks/tanstack"
 
 export const CreateTripPage = () => {
   const navigate = useNavigate()
+  const mutation = useTripMutation()
 
   const [isGuestInputOpen, setIsGuestInputOpen] = useState(false)
   const [isGuestModalOpen, setIsGuestModalOpen] = useState(false)
@@ -22,10 +24,7 @@ export const CreateTripPage = () => {
     DateRange | undefined
   >()
 
-  const [emailsToInvites, setEmailsToInvites] = useState([
-    "diego@acme.com",
-    "kaian@acme.com",
-  ])
+  const [emailsToInvites, setEmailsToInvites] = useState<string[]>([])
 
   const handleOpenGuestInput = () => setIsGuestInputOpen(true)
   const handleCloseGuestInput = () => setIsGuestInputOpen(false)
@@ -57,10 +56,21 @@ export const CreateTripPage = () => {
   const handleCreateTripSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!destination) return
-    if (!ownerName || !ownerName) return
-    if (!eventStartAndEndDates?.from || !eventStartAndEndDates?.to) return
-    if (emailsToInvites.length === 0) return
+    if (!destination) {
+      return toast("Informe o destino da viagem")
+    }
+
+    if (!eventStartAndEndDates?.from || !eventStartAndEndDates?.to) {
+      return toast("Informe a data de início e fim da viagem")
+    }
+
+    if (emailsToInvites.length === 0) {
+      return toast("Adicione pelo menos um convidado")
+    }
+
+    if (!ownerName || !ownerEmail) {
+      return toast("Informe o nome e/ou email do dono da viagem")
+    }
 
     const trip = {
       destination,
@@ -71,9 +81,14 @@ export const CreateTripPage = () => {
       emails_to_invite: emailsToInvites,
     }
 
-    const results = await api.post("/trips", trip)
-
-    const { tripId } = results.data
+    const tripId = await mutation.mutateAsync(trip, {
+      onSuccess: () => {
+        toast("Viagem criada com sucesso")
+      },
+      onError: () => {
+        toast("Ocorreu um erro, verifique os dados e tente novamente")
+      },
+    })
 
     navigate(`/trip/${tripId}`)
   }
@@ -131,6 +146,8 @@ export const CreateTripPage = () => {
 
       {isConfirmTripModalOpen && (
         <ConfirmTripModal
+          destination={destination}
+          eventStartAndEndDates={eventStartAndEndDates}
           handleCloseConfirmTripModal={handleCloseConfirmTripModal}
           handleCreateTripSubmit={handleCreateTripSubmit}
           setOwnerName={setOwnerName}

@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
+import { AxiosError } from "axios"
 
 import { Activities } from "../../types/trips"
 import { api } from "../../lib/axios"
-import { AxiosError } from "axios"
 
 export const useActivities = (trips: string) => {
   const getActivities = async (tripId: string) => {
@@ -13,6 +13,7 @@ export const useActivities = (trips: string) => {
       if (error instanceof AxiosError) {
         throw new Error(error.response?.data.message)
       }
+      throw new Error("Erro ao carregar atividades")
     }
   }
 
